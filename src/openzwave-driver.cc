@@ -17,6 +17,8 @@
 
 #include "openzwave.hpp"
 
+#include <stdio.h>
+
 using namespace v8;
 using namespace node;
 
@@ -29,33 +31,51 @@ namespace OZW {
 		Nan::HandleScope scope;
 		CheckMinArgs(1, "path");
 
+    printf("Entering OZW::Connect\n");
+
 		std::string path = (*String::Utf8Value(info[0]->ToString()));
 
+    printf("OZW::Connect Check 1\n");
 		uv_async_init(uv_default_loop(), &async, async_cb_handler);
+    printf("OZW::Connect Check 2\n");
 
 		Local<Function> callbackHandle = Nan::Get( info.This(),
 			Nan::New<String>("emit").ToLocalChecked()
 		).ToLocalChecked()
 		 .As<Function>();
 
+    printf("OZW::Connect Check 3\n");
 		emit_cb = new Nan::Callback(callbackHandle);
+    printf("OZW::Connect Check 4\n");
 
 		OZW* self = ObjectWrap::Unwrap<OZW>(info.This());
 
+    printf("OZW::Connect Check 5\n");
 		OpenZWave::Options::Create(self->config_path, self->userpath, self->option_overrides);
+    printf("OZW::Connect Check 6\n");
 		OpenZWave::Options::Get()->Lock();
+    printf("OZW::Connect Check 7\n");
 
+    printf("OZW::Connect Check 8\n");
 		OpenZWave::Manager::Create();
+    printf("OZW::Connect Check 9\n");
 		OpenZWave::Manager* mgr = OpenZWave::Manager::Get();
+    printf("OZW::Connect Check 10\n");
 		mgr->AddWatcher(ozw_watcher_callback, NULL);
+    printf("OZW::Connect Check 11\n");
 		mgr->AddDriver(path);
+    printf("OZW::Connect Check 12\n");
 		std::string version(OpenZWave::Manager::getVersionAsString());
+    printf("OZW::Connect Check 13\n");
 
 		Local < v8::Value > cbinfo[16];
 		cbinfo[0] = Nan::New<String>("connected").ToLocalChecked();
 		cbinfo[1] = Nan::New<String>(version).ToLocalChecked();
 
+    printf("OZW::Connect Check 14\n");
 		emit_cb->Call(Nan::New(ctx_obj), 2, cbinfo);
+    printf("OZW::Connect Check 15\n");
+    printf("Leaving OZW::Connect\n");
 	}
 
 	// ===================================================================
