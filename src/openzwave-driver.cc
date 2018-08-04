@@ -51,6 +51,9 @@ namespace OZW {
 		OZW* self = ObjectWrap::Unwrap<OZW>(info.This());
 
     printf("OZW::Connect Check 5\n");
+    printf("self->config_path = '%s'\n", self->config_path.c_str());
+		printf("self->userpath = '%s'\n", self->userpath.c_str());
+		printf("self->option_overrides = '%s'\n", self->option_overrides.c_str());
 		OpenZWave::Options::Create(self->config_path, self->userpath, self->option_overrides);
     printf("OZW::Connect Check 6\n");
 		OpenZWave::Options::Get()->Lock();
